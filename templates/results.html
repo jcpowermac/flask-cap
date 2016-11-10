@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block title %}Index{% endblock %}
+{% block body %}
+<div class="page-header">
+    <h1>Process Capabilities</h1>
+</div>
+<table class="datatable table table-striped table-bordered">
+    <thead>
+    <tr>
+        <th>Process Name</th>
+        <th>ppid</th>
+        <th>pid</th>
+        <th>Username</th>
+        <th>uid</th>
+        <th>gid</th>
+        <th>Capabilities</th>
+    </tr>
+
+    </thead>
+
+    <tbody>
+    {% for r in results %}
+        <tr>
+            <td>{{ r["name"] }}</td>
+            <td>{{ r["ppid"] }}</td>
+            <td>{{ r["pid"] }}</td>
+            <td>{{ r["username"] }}</td>
+            <td>{{ r["uids"] }}</td>
+            <td>{{ r["gids"] }}</td>
+            <td>{{ r["capabilities"] }}</td>
+        </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+<script>
+    // Initialize Datatables
+    $(document).ready(function () {
+        $('.datatable').dataTable();
+    });
+</script>
+{% endblock %}

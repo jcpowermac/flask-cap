@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html class="{{ html_class }}">
+    <head>
+    <title>{% block title %}Welcome{% endblock %}</title>
+
+<!-- PatternFly Styles -->
+<!-- Note: No other CSS files are needed regardless of what other JS packages located in patternfly/components that you decide to pull in -->
+<link rel="stylesheet" href="{{ url_for('static',filename='bower_components/patternfly/dist/css/patternfly.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static',filename='bower_components/patternfly/dist/css/patternfly-additions.min.css') }}">
+
+<!-- jQuery -->
+<script src="{{ url_for('static',filename='bower_components/jquery/dist/jquery.min.js') }}"></script>
+
+<!-- Bootstrap JS -->
+<script src="{{ url_for('static',filename='bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+
+<!-- C3, D3 - Charting Libraries -->
+<script src="{{ url_for('static',filename='bower_components/c3/c3.min.js')}}"></script>
+<script src="{{ url_for('static',filename='bower_components/d3/d3.min.js')}}"></script>
+
+<!-- Datatables, jQuery Grid Component -->
+<!-- Note: jquery.dataTables.js must occur in the html source before patternfly*.js.-->
+<script src="{{ url_for('static',filename='bower_components/datatables/media/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{ url_for('static',filename='bower_components/datatables-colvis/js/dataTables.colVis.js')}}"></script>
+<script src="{{ url_for('static',filename='bower_components/datatables-colreorder/js/dataTables.colReorder.js')}}"></script>
+
+<!-- PatternFly Custom Componets -  Sidebar, Popovers and Datatables Customizations -->
+<!-- Note: jquery.dataTables.js must occur in the html source before patternfly*.js.-->
+<script src="{{ url_for('static',filename='bower_components/patternfly/dist/js/patternfly.min.js')}}"></script>
+
+<!-- Bootstrap Combobox -->
+<script src="{{ url_for('static',filename='bower_components/bootstrap-combobox/js/bootstrap-combobox.js')}}"></script>
+
+<!-- Bootstrap Date Time Picker - requires Moment -->
+<script src="{{ url_for('static',filename='bower_components/moment/min/moment.min.js')}}"></script>
+
+<!-- Bootstrap Date Picker -->
+<script src="{{ url_for('static',filename='bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
+
+<!-- Bootstrap Select -->
+<script src="{{ url_for('static',filename='bower_components/bootstrap-select/dist/js/bootstrap-select.min.js')}}"></script>
+
+<!-- Bootstrap Switch -->
+<script src="{{ url_for('static',filename='bower_components/bootstrap-switch/dist/js/bootstrap-switch.min.js')}}"></script>
+
+<!-- Bootstrap Touchspin -->
+<script src="{{ url_for('static',filename='bower_components/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js')}}"></script>
+
+<!-- Bootstrap Tree View -->
+<script src="{{ url_for('static',filename='bower_components/patternfly-bootstrap-treeview/dist/bootstrap-treeview.min.js')}}"></script>
+
+<!-- Google Code Prettify - Syntax highlighting of code snippets -->
+<script src="{{ url_for('static',filename='bower_components/google-code-prettify/bin/prettify.min.js')}}"></script>
+
+<!-- MatchHeight - Used to make sure dashboard cards are the same height -->
+<script src="{{ url_for('static',filename='bower_components/matchHeight/jquery.matchHeight-min.js')}}"></script>
+
+<!-- Angular Application? You May Want to Consider Pulling Angular-PatternFly And Angular-UI Bootstrap instead of bootstrap.js -->
+<!-- See https://github.com/patternfly/angular-patternfly for more information -->
+    </head>
+    <div class="body">
+        {% block body %}{% endblock %}
+    </div>
+    <div class="footer">
+  flaskcap&mdash; A Flask Application
+</div>
+</html>
