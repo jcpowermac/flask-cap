@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block title %}Index{% endblock %}
+{% block body %}
+
+
+<body class="console-os">
+<div ng-view>
+<nafv class="navbar navbar-pf-alt top-header" role="navigation">
+<div row>
+<div class="navbar-header">
+</div>
+</div>
+</nafv>
+
+<div class="page-header">
+    <h1>Docker</h1>
+</div>
+    <form class="form-horizontal" role="form" method="POST" action="#">
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="dockerimage">Docker Image</label>
+    <div class="col-sm-10">
+      <input type="text" id="dockerimage" name="dockerimage" class="form-control">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="dockerrun">Docker Run</label>
+    <div class="col-sm-10">
+      <input type="text" id="dockerrun" name="dockerrun" class="form-control"></div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-primary">Primary Action</button>
+    </div>
+  </div>
+</form>
+<div id="log"></div>
+{% endblock %}

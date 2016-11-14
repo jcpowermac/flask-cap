@@ -5,6 +5,7 @@
 
 <!-- PatternFly Styles -->
 <!-- Note: No other CSS files are needed regardless of what other JS packages located in patternfly/components that you decide to pull in -->
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
 <link rel="stylesheet" href="{{ url_for('static',filename='bower_components/patternfly/dist/css/patternfly.min.css') }}">
 <link rel="stylesheet" href="{{ url_for('static',filename='bower_components/patternfly/dist/css/patternfly-additions.min.css') }}">
 
@@ -57,6 +58,29 @@
 
 <!-- Angular Application? You May Want to Consider Pulling Angular-PatternFly And Angular-UI Bootstrap instead of bootstrap.js -->
 <!-- See https://github.com/patternfly/angular-patternfly for more information -->
+         <script type="text/javascript" charset="utf-8">
+        $(document).ready(function() {
+            // Use a "/test" namespace.
+            // An application can open a connection on multiple namespaces, and
+            // Socket.IO will multiplex all those connections on a single
+            // physical channel. If you don't care about multiple channels, you
+            // can set the namespace to an empty string.
+            namespace = '';
+            // Connect to the Socket.IO server.
+            // The connection URL has the following format:
+            //     http[s]://<domain>:<port>[/<namespace>]
+            var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
+
+
+            // Event handler for server sent data.
+            // The callback function is invoked whenever the server emits data
+            // to the client. The data is then displayed in the "Received"
+            // section of the page.
+            socket.on('dockerpull', function(msg) {
+                $('#log').append('<br>' + $('<div/>').text(msg.data).html());
+            });
+        });
+    </script>
     </head>
     <div class="body">
         {% block body %}{% endblock %}

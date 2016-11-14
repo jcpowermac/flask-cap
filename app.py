@@ -1,11 +1,16 @@
 #!/usr/bin/env python
 
+from docker import Client
 from flask import Flask, render_template, request, session, url_for, redirect, \
     Response, abort
 from flask_login import LoginManager, UserMixin, \
                                 login_required, login_user, logout_user
+
+from flask_socketio import SocketIO
+
 import psutil
 import capng
+import json
 
 DEBUG = True
 SECRET_KEY = 'development key'
@@ -14,11 +19,18 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('FLASKCAP_SETTINGS', silent=True)
 
+async_mode = None
+
+socketio = SocketIO(app, async_mode=async_mode)
+
+
 # flask-login
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
 
+
+pids = []
 
 # silly user model
 class User(UserMixin):
@@ -69,12 +81,30 @@ def login():
             id = username.split('user')[1]
             user = User(id)
             login_user(user)
-            return redirect(url_for('results'))
+            return redirect(url_for('docker'))
 
     return render_template('login.html', error=error)
 
+
+@app.route('/docker', methods=['GET', 'POST'])
+def docker():
+    if request.method == "POST":
+        cli = Client(base_url='unix://var/run/docker.sock', version='auto')
+        image = request.form["dockerimage"]
+        dockerrun = request.form["dockerrun"]
+        for line in cli.pull(image, tag="latest", stream=True):
+            socketio.emit('dockerpull', {'data': json.dumps(json.loads(line))}, namespace='')
+        container = cli.create_container(image=image)
+        container_id = container['Id']
+        cli.start(container_id)
+        socketio.sleep(10)
+        pids = cli.top(container_id)
+        print pids
+        return redirect(url_for('results'))
+    return render_template('docker.html', async_mode=socketio.async_mode )
+
+
 @app.route('/results')
-@login_required
 def results():
     results = []
     for proc in psutil.process_iter():
@@ -88,7 +118,7 @@ def results():
                 pinfo["capabilities"] = capstext
                 results.append(pinfo)
 
-    return render_template('results.html', results=results)
+    return render_template('results.html', results=results, async_mode=socketio.async_mode)
 
 # somewhere to logout
 @app.route("/logout")
@@ -111,4 +141,4 @@ def load_user(userid):
 
 
 if __name__ == '__main__':
-    app.run()
+    socketio.run(app, debug=True)
