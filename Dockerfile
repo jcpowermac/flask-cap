@@ -74,9 +74,9 @@ RUN echo "DOCKER_STORAGE_OPTIONS=--storage-driver vfs" >\
  /etc/sysconfig/docker-storage
 
 COPY dind-setup.sh /usr/local/bin
-COPY dind-setup.service /etc/systemd/system/
-COPY gunicorn.service /etc/systemd/system/
-COPY gunicorn.socket /etc/systemd/system/
+COPY ./units/dind-setup.service /etc/systemd/system/
+COPY ./units/gunicorn.service /etc/systemd/system/
+COPY ./units/gunicorn.socket /etc/systemd/system/
 RUN systemctl enable dind-setup.service && \
     systemctl enable gunicorn.service
 

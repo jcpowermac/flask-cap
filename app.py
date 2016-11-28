@@ -11,6 +11,9 @@ from flask_socketio import SocketIO
 import psutil
 import capng
 import json
+import sys
+
+
 
 DEBUG = True
 SECRET_KEY = 'development key'
@@ -89,11 +92,35 @@ def login():
 @app.route('/docker', methods=['GET', 'POST'])
 def docker():
     if request.method == "POST":
+        total = 0
+        current = 0
+        layerids = []
         cli = Client(base_url='unix://var/run/docker.sock', version='auto')
         image = request.form["dockerimage"]
         dockerrun = request.form["dockerrun"]
+
         for line in cli.pull(image, tag="latest", stream=True):
-            socketio.emit('dockerpull', {'data': json.dumps(json.loads(line))}, namespace='')
+            pull = json.loads(line)
+
+            if 'id' in pull and 'progressDetail' in pull:
+                id = pull['id']
+                progressDetail = pull['progressDetail']
+                # print(json.dumps(pull, indent=4))
+                # sys.stdout.flush()
+                if 'total' in progressDetail and 'current' in progressDetail:
+                    if id in layerids:
+                        current += pull['progressDetail']['current']
+                    else:
+                        layerids.append(id)
+                        total += pull['progressDetail']['total']
+
+                    # print current / total
+                    # sys.stdout.flush()
+                    value = current / total
+                    style = "width: %d %%;" % value
+                    socketio.emit('aria-valuenow', {'style': style, 'value': value }, namespace='')
+
+                #socketio.emit('dockerpull', {'data': json.dumps(pull)}, namespace='')
         container = cli.create_container(image=image)
         container_id = container['Id']
         cli.start(container_id)
@@ -101,7 +128,7 @@ def docker():
         pids = cli.top(container_id)
         print pids
         return redirect(url_for('results'))
-    return render_template('docker.html', async_mode=socketio.async_mode )
+    return render_template('docker.html', async_mode=socketio.async_mode)
 
 
 @app.route('/results')
@@ -118,7 +145,8 @@ def results():
                 pinfo["capabilities"] = capstext
                 results.append(pinfo)
 
-    return render_template('results.html', results=results, async_mode=socketio.async_mode)
+    return render_template('results.html', results=results)
+
 
 # somewhere to logout
 @app.route("/logout")
