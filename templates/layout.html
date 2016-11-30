@@ -58,38 +58,7 @@
 
 <!-- Angular Application? You May Want to Consider Pulling Angular-PatternFly And Angular-UI Bootstrap instead of bootstrap.js -->
 <!-- See https://github.com/patternfly/angular-patternfly for more information -->
-        {% if socket %}
-         <script type="text/javascript" charset="utf-8">
-        $(document).ready(function() {
-            // Use a "/test" namespace.
-            // An application can open a connection on multiple namespaces, and
-            // Socket.IO will multiplex all those connections on a single
-            // physical channel. If you don't care about multiple channels, you
-            // can set the namespace to an empty string.
-            namespace = '';
-            // Connect to the Socket.IO server.
-            // The connection URL has the following format:
-            //     http[s]://<domain>:<port>[/<namespace>]
-            var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
 
-
-            // Event handler for server sent data.
-            // The callback function is invoked whenever the server emits data
-            // to the client. The data is then displayed in the "Received"
-            // section of the page.
-            //socket.on('dockerpull', function(msg) {
-            //    $('#log').append('<br>' + $('<div/>').text(msg.data).html());
-            //});
-
-            socket.on('aria-valuenow', function(msg) {
-                document.getElementById("progressbar").setAttribute("style", msg.style);
-                document.getElementById("progressbar").setAttribute("aria-valuenow", msg.value);
-
-                console.log(msg.data);
-            });
-        });
-    </script>
-        {% endif %}
     </head>
     <body class="console-os">
 
@@ -166,5 +135,18 @@
 </nav>
         {% endif %}
         {% block body %}{% endblock %}
+    {% if socket %}
+         <script type="text/javascript" charset="utf-8">
+        $(document).ready(function() {
+            namespace = '';
+            var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
+
+            socket.on('progressupdate', function(msg) {
+                $("div#progressbar.progress-bar").attr("aria-valuenow", msg.value);
+                $("div#progressbar.progress-bar").attr("style", msg.style);
+            });
+        });
+    </script>
+        {% endif %}
     </body>
 </html>

@@ -116,9 +116,9 @@ def docker():
 
                     # print current / total
                     # sys.stdout.flush()
-                    value = current / total
-                    style = "width: %d %%;" % value
-                    socketio.emit('aria-valuenow', {'style': style, 'value': value }, namespace='')
+                    value = str(current / total)
+                    style = "width: %s%%;" % value
+                    socketio.emit('progressupdate', {'style': style, 'value': value }, namespace='')
 
                 #socketio.emit('dockerpull', {'data': json.dumps(pull)}, namespace='')
         container = cli.create_container(image=image)
