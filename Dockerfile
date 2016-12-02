@@ -2,7 +2,7 @@ FROM fedora:24
 
 LABEL   name="jcpowermac/flask-cap" \
         url="https://github.com/jcpowermac/flask-cap" \
-        run="docker run -d -p 0.0.0.0:8000:8000 -p 0.0.0.0:9000:9000 --pid=host --privileged --name NAME flask-cap" 
+        run="docker run -d -p 0.0.0.0:8000:8000 -p 0.0.0.0:9000:9000 --pid=host --privileged --name NAME jcpowermac/flask-cap" 
     
 ENV PKGS="procps python-devel gcc make redhat-rpm-config git glibc-langpack-en libcap-ng-python npm python-pip"
 ENV REMOVE_PKG="npm python-devel gcc make docker-v1.10-migrator glibc-all-langpacks selinux-policy-minimum"
