@@ -120,7 +120,6 @@ def docker():
                     style = "width: %s%%;" % value
                     socketio.emit('progressupdate', {'style': style, 'value': value }, namespace='')
 
-                #socketio.emit('dockerpull', {'data': json.dumps(pull)}, namespace='')
         container = cli.create_container(image=image)
         container_id = container['Id']
         cli.start(container_id)
@@ -137,13 +136,15 @@ def results():
     for proc in psutil.process_iter():
         try:
             pinfo = proc.as_dict(attrs=['ppid', 'pid', 'name', 'username', 'uids', 'gids'])
+            pinfo["capabilities"] = "Not available"
         except psutil.NoSuchProcess:
             pass
         else:
             capstext = capabilities(pinfo["pid"])
             if capstext is not None:
                 pinfo["capabilities"] = capstext
-                results.append(pinfo)
+
+            results.append(pinfo)
 
     return render_template('results.html', results=results)
 
